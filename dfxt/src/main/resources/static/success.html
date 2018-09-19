@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>用户列表</title>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<script type="text/javascript">
+
+$(function(){  
+   $.post("http://localhost:8080/power/list",function(data){
+		var result="";	   
+	   	result += '<table border="1" cellspacing="0"><tr><th>用户名</th><th>密码</th><th>操作</th></tr>';
+	   	$.each(data,function(index,item){
+	   		result += '<tr><td>'+item.username+'</td><td>'+item.password+'</td><td><input type="button" onclick="del(\''+item.id+'\')" value="删除"/><input type="button" onclick="selOne(\''+item.id+'\')" value="修改"/></td></tr>';
+	   	})
+	   	result += '</table>';
+	   	$("#listid").html(result);
+   })
+}); 
+</script>
+<body>
+	<div id="listid"></div>
+	<div id="updateId"></div>
+	<a href="#" onclick="javascript:history.back(-1);">返回</a>
+<script type="text/javascript">
+function del(id){
+	$.post("http://localhost:8080/power/delete",{id:id},function(result){
+		if(result=="true"){
+			alert("删除成功");
+			window.location.reload();
+		}else{
+			alert("删除失败");
+		}
+	})
+}
+function selOne(id){
+	$.post("http://localhost:8080/power/selectOne",{id:id},function(data){
+		if(data!=null){
+			$("#listid").hide();
+			var result="";
+			result += '<input type="hidden" id="uid" value="'+data.id+'">用户名:<input type="text" id="name" value="'+data.username+'"><br/>密码:<input type="text" id="pwd" value="'+data.password+'"><br/><input type="button" value="修改"  onclick="upd()"/>';
+			$("#updateId").html(result);
+		}else{
+			alert("抱歉!系统出错了");
+		}
+	})
+}
+function upd(){
+		var id = $("#uid").val();
+		var username = $("#name").val();
+		var password = $("#pwd").val();
+		
+		$.post("http://localhost:8080/power/update",{id:id,username:username,password:password},function(data){
+			if(data=="true"){
+				alert("修改成功");
+				window.location.reload();
+			}
+		})
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>登录注册</title>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+		username:<input type="text" id="nameId" maxlength="24"/>
+		password:<input type="password" id="pwdId"/><br/>
+		<input type="button" onclick="login()" value="登陆"/>
+		<input type="button" onclick="regist()" value="注册"/>
+</body>
+<script  type="text/javascript">
+		function login(){
+			var name = $("#nameId").val();
+			var pwd = $("#pwdId").val();
+			
+			
+			 if(name!=""&&pwd!=""){
+				$.post("http://localhost:8080/power/login",{username:name,password:pwd},function (dataResult){
+					if(dataResult=="true"){
+						 window.location.href="http://localhost:8080/success.html"; 
+					}else{
+						alert("登录失败");
+					}
+					
+				})
+			}else{
+				alert("用户名或密码不能为空");
+			} 
+		}
+		function regist(){
+			var name = $("#nameId").val();
+			var pwd = $("#pwdId").val();
+			
+			if(name!=""&&pwd!=""){
+				$.post("http://localhost:8080/power/regist",{username:name,password:pwd},function (dataResult){
+					if(dataResult=="true"){
+						alert("注册成功");
+					}else{
+						alert("注册失败");
+					}
+					
+				})
+			}else{
+				alert("用户名或密码不能为空");
+			}
+		} 
+	</script>
+</html>
